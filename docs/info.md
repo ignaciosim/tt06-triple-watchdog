@@ -9,12 +9,26 @@ You can also include images in this folder and reference them in the markdown. E
 
 ## How it works
 
-Explain how your project works
+The circuit is composed of three watchdog modules working in lockstep. They share a common clock, a common reset line (active low) and a common 8-bit input word. An external system must write a value in ui_in in order to kick the watchdog, and the value must be different than the previous one each time. The timeout is fixed and set in 1ms. Once the timeout happens, the WD module goes to IDLE mode until a reset is issued and each internal watchdog will set an output pin high.
+
+### Pinout
+
+| Pin               | Direction | Comment                                            |
+|-------------------|-----------|----------------------------------------------------|
+| clk               | input     |                                                    |
+| rst_n             | reset     | Active low                                         |
+| ui_in[8]          | input     | System must write a new value to kick the watchdog |
+| watchdog_expired1 | output    | 1: wd has expired; 0: wd has not expired           |
+| watchdog_expired2 | output    | 1: wd has expired; 0: wd has not expired           |
+| watchdog_expired3 | output    | 1: wd has expired; 0: wd has not expired           |
 
 ## How to test
 
-Explain how to use your project
+- Provide a 10ns period clock in its clk input
+- Set rst_n to low
+- Write a value in ui_in before 1ms after reset is released
+- Write a different value in ui_in to prevent the watchdog expiring
 
 ## External hardware
 
-List external hardware used in your project (e.g. PMOD, LED display, etc), if any
+None
